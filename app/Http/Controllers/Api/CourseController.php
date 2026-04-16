@@ -55,7 +55,7 @@ class CourseController extends Controller
          * Por lo tanto, se retorna un array con dos claves: 'instructors' y 'courses', cada una con su respectiva paginacion.
          * Dejo en este mismo Controller la funcion correspondiente al final, para listar cursos, y la de instructores en su correspondiente controller
          */
-        $coursePerPage = max(1, min(100, (int) $request->integer('per_page', 15)));
+        $coursePerPage      = max(1, min(100, (int) $request->integer('per_page', 15)));
         $instructorsPerPage = max(1, min(1000, (int) $request->integer('instructors_per_page', 100)));
 
         $courses = Course::query()
@@ -77,24 +77,24 @@ class CourseController extends Controller
 
         return response()->json([
             'instructors' => [
-                'data' => InstructorResource::collection($instructors->items())->resolve(),
+                'data'       => InstructorResource::collection($instructors->items())->resolve(),
                 'pagination' => [
-                    'per_page' => $instructors->perPage(),
-                    'path' => $instructors->path(),
+                    'per_page'    => $instructors->perPage(),
+                    'path'        => $instructors->path(),
                     'next_cursor' => $instructors->nextCursor()?->encode(),
                     'prev_cursor' => $instructors->previousCursor()?->encode(),
                 ],
             ],
             'courses' => [
-                'data' => CourseResource::collection($courses->items())->resolve(),
+                'data'       => CourseResource::collection($courses->items())->resolve(),
                 'pagination' => [
-                    'current_page' => $courses->currentPage(),
-                    'per_page' => $courses->perPage(),
-                    'last_page' => $courses->lastPage(),
-                    'total' => $courses->total(),
+                    'current_page'  => $courses->currentPage(),
+                    'per_page'      => $courses->perPage(),
+                    'last_page'     => $courses->lastPage(),
+                    'total'         => $courses->total(),
                     'next_page_url' => $courses->nextPageUrl(),
                     'prev_page_url' => $courses->previousPageUrl(),
-                    'path' => $courses->path(),
+                    'path'          => $courses->path(),
                 ],
             ],
         ]);
@@ -263,17 +263,17 @@ class CourseController extends Controller
             ->select(['id', 'instructor_id', 'title', 'price', 'level', 'is_published', 'created_at'])
             ->orderBy('id')
             ->cursorPaginate(
-                perPage: $coursePerPage,
-                columns: ['*'],
+                perPage   : $coursePerPage,
+                columns   : ['*'],
                 cursorName: 'courses_cursor'
             );
 
         return response()->json([
             'courses' => [
-                'data' => CourseResource::collection($courses->items())->resolve(),
+                'data'       => CourseResource::collection($courses->items())->resolve(),
                 'pagination' => [
-                    'per_page' => $courses->perPage(),
-                    'path' => $courses->path(),
+                    'per_page'    => $courses->perPage(),
+                    'path'        => $courses->path(),
                     'next_cursor' => $courses->nextCursor()?->encode(),
                     'prev_cursor' => $courses->previousCursor()?->encode(),
                 ],
